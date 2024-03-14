@@ -6,10 +6,8 @@ interface LinkProps {
   text: string
 }
 
-const CustomLink:React.FC<LinkProps> = ({path, text}) => {
-  return (
+const CustomLink:React.FC<LinkProps> = ({path, text}) => (
     <Link style={{color: '#316FEA', textDecoration: 'none'}} to={path}>{text}</Link>
-  )
-}
+)
 
 export default CustomLink;

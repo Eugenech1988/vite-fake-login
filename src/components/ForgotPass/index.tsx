@@ -13,7 +13,7 @@ const ForgotPass: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const navigate = useNavigate();
 
-  const handleEmailInputChange = (e) => {
+  const handleEmailInputChange = (e:any) => {
     setEmail(e.target.value);
   };
 
@@ -21,7 +21,7 @@ const ForgotPass: React.FC = () => {
     setErrorEmail(null);
   };
 
-  const handleEmailEnterPress = (e) => {
+  const handleEmailEnterPress = (e:any) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
@@ -33,7 +33,7 @@ const ForgotPass: React.FC = () => {
     }
   };
 
-  const handleEmailBlur = (e) => {
+  const handleEmailBlur = (e:any) => {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
       setErrorEmail(null);
     } else {
@@ -41,7 +41,7 @@ const ForgotPass: React.FC = () => {
     }
   };
 
-  const handleForgotClick = (e) => {
+  const handleForgotClick = (e:any) => {
     e.preventDefault();
     if (!errorEmail) {
       navigate('/reset');

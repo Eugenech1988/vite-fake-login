@@ -37,24 +37,21 @@ const ResetPass: React.FC = () => {
     event.preventDefault();
   };
 
-  const handlePassChange = (e) => {
+  const handlePassChange = (e:any) => {
     setPassword(e.target.value);
-    if (e.target.value.length <= 8) {
-      setErrorPass('Password must be more than 8 characters');
-    }
   }
 
-  const handleConfirmChange = (e) => {
+  const handleConfirmChange = (e:any) => {
     setPasswordConfirm(e.target.value)
   }
 
-  const handlePassConfirmBlur = (e) => {
+  const handlePassConfirmBlur = (e:any) => {
     if (e.target.value.length <= 8) {
       setErrorPassConfirm('Password must be more than 8 characters');
     }
   }
 
-  const handlePassConfirmEnterPress = (e) => {
+  const handlePassConfirmEnterPress = (e:any) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (e.target.value.length <= 8) {
@@ -64,13 +61,13 @@ const ResetPass: React.FC = () => {
     }
   }
 
-  const handlePassBlur = (e) => {
+  const handlePassBlur = (e:any) => {
     if (e.target.value.length <= 8) {
       setErrorPass('Password must be more than 8 characters');
     }
   }
 
-  const handlePassEnterPress = (e) => {
+  const handlePassEnterPress = (e:any) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (e.target.value.length <= 8) {
@@ -87,9 +84,9 @@ const ResetPass: React.FC = () => {
     setErrorPassConfirm(null);
   }
 
-  const handleResetClick = (e) => {
+  const handleResetClick = (e:any) => {
     e.preventDefault();
-    if ((password.length > 8) && (password_confirm > 8) && (password === password_confirm)) {
+    if ((+password.length > 8) && (+password_confirm > 8) && (password === password_confirm)) {
       setResetPassSuccess('Password saved successfully');
       setTimeout(() => {
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -29,15 +29,15 @@ const Login: React.FC = () => {
     event.preventDefault();
   };
 
-  const handleEmailInputChange = (e) => {
+  const handleEmailInputChange = (e:any) => {
     setEmail(e.target.value);
   };
 
-  const handlePassInputChange = (e) => {
+  const handlePassInputChange = (e:any) => {
     setPassword(e.target.value);
   };
 
-  const handlePassEnterPress = (e) => {
+  const handlePassEnterPress = (e:any) => {
     if (e.key === 'Enter') {
       if (e.target.value <= 8) {
         setErrorPass('Password must be more then 8 characters')
@@ -50,7 +50,7 @@ const Login: React.FC = () => {
     setErrorPass(null)
   }
 
-  const handlePassBlur = (e) => {
+  const handlePassBlur = (e:any) => {
     if (e.target.value.length <= 8) {
       setErrorPass('Password must be more then 8 characters')
     }
@@ -60,7 +60,7 @@ const Login: React.FC = () => {
     setErrorEmail(null);
   };
 
-  const handleEmailEnterPress = (e) => {
+  const handleEmailEnterPress = (e:any) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
@@ -73,7 +73,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleEmailBlur = (e) => {
+  const handleEmailBlur = (e:any) => {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
       setEmailVerified(true);
       setErrorEmail(null);
@@ -85,7 +85,7 @@ const Login: React.FC = () => {
     setErrorPass(null);
   }
 
-  const handleSubmitClick = async (e) => {
+  const handleSubmitClick = async (e:any) => {
     e.preventDefault();
     if (!errorPass && !errorEmail) {
       const response = await apiRequest(
@@ -120,7 +120,7 @@ const Login: React.FC = () => {
               id="outlined-email"
               error={errorEmail !== null}
               onBlur={handleEmailBlur}
-              handleFocus={handleEmailFocus}
+              onFocus={handleEmailFocus}
               onKeyPress={handleEmailEnterPress}
               onChange={handleEmailInputChange}
               value={email}
@@ -173,7 +173,7 @@ const Login: React.FC = () => {
         </form>
       </Box>
       <Typography sx={{fontSize: '14px', lineHeight: '20px', marginBottom: '15px'}} textAlign="center">Is your company new to
-        Qencode? <CustomLink text="Sign up"/></Typography>
+        Qencode? <CustomLink path={'/'} text="Sign up"/></Typography>
       {responseDetail &&
         <Alert>{responseDetail}</Alert>
       }

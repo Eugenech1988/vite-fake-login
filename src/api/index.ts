@@ -5,18 +5,18 @@ const apiRequest = (
   url: string,
   method: string,
   data: any,
-  headers: string,
-  timeout: number,
-  responseType: string
+  // headers: string,
+  // timeout: number,
+  // responseType: string
 ) => (
   axios({
     url,
     method,
     baseURL: BASE_URL,
     data,
-    headers,
-    timeout,
-    responseType
+    // headers,
+    // timeout,
+    // responseType
   })
     .then(res => res.data)
     .catch(err => {
