@@ -14,6 +14,7 @@ import {
 import { input, inputLabel, submitNavigateBtn } from '../styleConstants';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
+import { useNavigate } from "react-router-dom";
 // import apiRequest from '../../api';
 
 const ResetPass: React.FC = () => {
@@ -24,6 +25,7 @@ const ResetPass: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const [resetPassSuccess, setResetPassSuccess] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -89,7 +91,7 @@ const ResetPass: React.FC = () => {
     if ((+password.length > 8) && (+password_confirm > 8) && (password === password_confirm)) {
       setResetPassSuccess('Password saved successfully');
       setTimeout(() => {
-
+        navigate('/');
       }, 1000)
     } else if (password !== password_confirm) {
       setErrorPass('Passwords are not equal');
