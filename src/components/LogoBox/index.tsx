@@ -7,7 +7,7 @@ const LogoBox: React.FC = () => {
   const [matches, setMatches] = useState<boolean>(mediaMatch.matches);
 
   useEffect(() => {
-    const handler = e => setMatches(e.matches);
+    const handler = (e:any) => setMatches(e.matches);
     mediaMatch.addListener(handler);
     return () => mediaMatch.removeListener(handler);
   });
