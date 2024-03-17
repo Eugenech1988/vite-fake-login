@@ -4,7 +4,7 @@ import logo from '../../assets/logo.svg';
 
 const LogoBox: React.FC = () => {
   const mediaMatch = window.matchMedia('(max-width: 768px)');
-  const [matches, setMatches] = useState(mediaMatch.matches);
+  const [matches, setMatches] = useState<boolean>(mediaMatch.matches);
 
   useEffect(() => {
     const handler = e => setMatches(e.matches);
@@ -13,31 +13,27 @@ const LogoBox: React.FC = () => {
   });
 
   const styles = {
-    box: (match) => {
-      if (match === false) {
+    box: (matches: boolean): React.CSSProperties => {
+      if (!matches) {
         return {
           paddingTop: '180px',
           marginBottom: '80px',
           textAlign: 'center'
         };
-      } else if (match === true) {
+      } else {
         return {
           paddingTop: '60px',
           marginBottom: '40px',
           textAlign: 'center'
         };
       }
-
     }
   };
 
   return (
-    <>
-      {/*ts-ignore*/}
       <Box style={styles.box(matches)}>
         <img src={logo} alt="qencode"/>
       </Box>
-    </>
   );
 };
 
