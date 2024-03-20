@@ -25,7 +25,8 @@ const ForgotPass: React.FC = () => {
     if (e.key === 'Enter') {
       e.preventDefault();
       const target = e.target as HTMLInputElement;
-      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(target.value)) {
+      if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        .test(target.value)) {
         setErrorEmail(null);
       } else {
         setErrorEmail('Email is invalid');
@@ -35,7 +36,8 @@ const ForgotPass: React.FC = () => {
   };
 
   const handleEmailBlur = (e: FocusEvent<HTMLInputElement>) => {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
+    if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      .test(e.target.value)) {
       setErrorEmail(null);
     } else {
       setErrorEmail('Email is invalid');
