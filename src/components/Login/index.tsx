@@ -14,10 +14,16 @@ import { loginDivider, submitNavigateBtn, socialBtn, input, inputLabel } from '.
 import { FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
+interface ResponseDetail {
+  email: string | null;
+  pass: string | null;
+  detail?: string;
+}
+
 const Login: React.FC = () => {
   const [errorEmail, setErrorEmail] = useState<string | null>(null);
   const [errorPass, setErrorPass] = useState<string | null>(null);
-  const [responseDetail, setResponseDetail] = useState<object>(null);
+  const [responseDetail, setResponseDetail] = useState<ResponseDetail | null>(null);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [emailVerified, setEmailVerified] = useState<boolean>(false);
@@ -108,11 +114,13 @@ const Login: React.FC = () => {
         console.log('Error occurred:', error);
       } else {
         console.log('Response:', data);
+        const dataTyped = data as Record<string, any>;
         if (typeof data === 'string') {
+          //@ts-ignore
           setResponseDetail(data);
-        } else if (Array.isArray(data.detail)) {
-          const dataEmail = data.detail.find(detail => detail.field_name === 'email');
-          const dataPass = data.detail.find(detail => detail.field_name === 'password');
+        } else if (Array.isArray(dataTyped.detail)) {
+          const dataEmail = dataTyped.detail.find((detail: {field_name: string}) => detail.field_name === 'email');
+          const dataPass = dataTyped.detail.find((detail: {field_name: string}) => detail.field_name === 'password');
           setResponseDetail({email: (dataEmail ? dataEmail : null), pass: (dataPass ? dataPass : null)})
         }
       }

@@ -24,7 +24,7 @@ const apiRequest = async <T>(
       error: null,
     } as ApiResponse<T>;
   } catch (error) {
-    console.log('err', error.response?.status);
+    // console.log('err', error.response?.status);
     return {
       data: null,
       error: error as AxiosError,

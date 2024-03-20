@@ -6,6 +6,7 @@ import LogoBox from '../LogoBox';
 import HeadingNotify from '../HeadingNotify';
 import { input, inputLabel, submitNavigateBtn } from '../styleConstants';
 import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
+import apiRequest from '../../api';
 // import apiRequest from '../../api';
 
 const ForgotPass: React.FC = () => {
@@ -49,14 +50,20 @@ const ForgotPass: React.FC = () => {
     // if (!errorEmail) {
     //   navigate('/reset');
     // }
-    // const response = await apiRequest(
-    //   '/v1/auth/password-reset',
-    //   'post',
-    //   {
-    //     email
-    //   }
-    // );
-    // console.log(response.detail[0]);
+    if (!errorEmail) {
+      const {data, error} = await apiRequest(
+        '/v1/auth/password-reset',
+        'post',
+        {
+          email
+        }
+      );
+      if (error) {
+        console.log('Error occurred:', error);
+      } else {
+        console.log('Response:', data);
+      }
+    }
   };
   return (
     <>
@@ -80,6 +87,7 @@ const ForgotPass: React.FC = () => {
               label="Enter your mail"
             />
           </FormControl>
+          {/*@ts-ignore*/}
           <Button sx={{...submitNavigateBtn, background: '#316FEA', marginBottom: '30px'}} fullWidth
                   onClick={handleForgotClick} variant="contained">Send</Button>
         </form>
