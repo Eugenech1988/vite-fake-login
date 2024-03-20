@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, FocusEvent, MouseEvent, useState } from 'react';
 import LogoBox from '../LogoBox';
 import HeadingNotify from '../HeadingNotify';
 import Button from '@mui/material/Button';
@@ -15,7 +15,6 @@ import { input, inputLabel, submitNavigateBtn } from '../styleConstants';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from "react-router-dom";
-// import apiRequest from '../../api';
 
 const ResetPass: React.FC = () => {
   const [errorPass, setErrorPass] = useState<string | null>(null);
@@ -39,43 +38,43 @@ const ResetPass: React.FC = () => {
     event.preventDefault();
   };
 
-  const handlePassChange = (e:any) => {
+  const handlePassChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  }
+  };
 
-  const handleConfirmChange = (e:any) => {
+  const handleConfirmChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPasswordConfirm(e.target.value)
   }
 
-  const handlePassConfirmBlur = (e:any) => {
+  const handlePassConfirmBlur = (e: FocusEvent<HTMLInputElement>) => {
     if (e.target.value.length <= 8) {
       setErrorPassConfirm('Password must be more than 8 characters');
     }
-  }
+  };
 
-  const handlePassConfirmEnterPress = (e:any) => {
+  const handlePassConfirmEnterPress = (e: any) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (e.target.value.length <= 8) {
-        setErrorPass('Password must be more then 8 characters')
+      if (e.currentTarget.value.length <= 8) {
+        setErrorPass('Password must be more than 8 characters');
       }
-      e.target.blur();
+      e.currentTarget.blur();
     }
-  }
+  };
 
-  const handlePassBlur = (e:any) => {
+  const handlePassBlur = (e: FocusEvent<HTMLInputElement>) => {
     if (e.target.value.length <= 8) {
       setErrorPass('Password must be more than 8 characters');
     }
   }
 
-  const handlePassEnterPress = (e:any) => {
+  const handlePassEnterPress = (e: any) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (e.target.value.length <= 8) {
-        setErrorPassConfirm('Password must be more then 8 characters')
+      if (e.currentTarget.value.length <= 8) {
+        setErrorPass('Password must be more than 8 characters');
       }
-      e.target.blur();
+      e.currentTarget.blur();
     }
   }
 
@@ -86,28 +85,19 @@ const ResetPass: React.FC = () => {
     setErrorPassConfirm(null);
   }
 
-  const handleResetClick = (e:any) => {
+  const handleResetClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if ((+password.length > 8) && (+password_confirm > 8) && (password === password_confirm)) {
+
+    if ((password.length > 8) && (password_confirm.length > 8) && (password === password_confirm)) {
       setResetPassSuccess('Password saved successfully');
       setTimeout(() => {
         navigate('/');
-      }, 1000)
+      }, 1000);
     } else if (password !== password_confirm) {
       setErrorPass('Passwords are not equal');
       setErrorPassConfirm('Passwords are not equal');
     }
-    // apiRequest(
-    //   '/v1/auth/password-set',
-    //   'post',
-    //   {
-    //     token: "string",
-    //     secret: 'string',
-    //     password,
-    //     password_confirm
-    //   }
-    // )
-  }
+  };
   return (
     <>
       <LogoBox/>
