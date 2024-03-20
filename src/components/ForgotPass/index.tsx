@@ -1,18 +1,19 @@
 import React, { ChangeEvent, KeyboardEvent, FocusEvent, MouseEventHandler, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoBox from '../LogoBox';
 import HeadingNotify from '../HeadingNotify';
 import { input, inputLabel, submitNavigateBtn } from '../styleConstants';
 import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
 import apiRequest from '../../api';
-// import apiRequest from '../../api';
+import Alert from '@mui/material/Alert';
 
 const ForgotPass: React.FC = () => {
   const [errorEmail, setErrorEmail] = useState<string | null>(null);
   const [email, setEmail] = useState<string>('');
-  // const navigate = useNavigate();
+  const [responseDetail, setResponseDetail] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleEmailInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -47,9 +48,6 @@ const ForgotPass: React.FC = () => {
 
   const handleForgotClick: MouseEventHandler<HTMLAnchorElement> = async (e) => {
     e.preventDefault();
-    // if (!errorEmail) {
-    //   navigate('/reset');
-    // }
     if (!errorEmail) {
       const {data, error} = await apiRequest(
         '/v1/auth/password-reset',
@@ -62,6 +60,15 @@ const ForgotPass: React.FC = () => {
         console.log('Error occurred:', error);
       } else {
         console.log('Response:', data);
+        //@ts-ignore
+        if (data.detail === 'Invalid user' || data.detail === 'Too many requests') {
+          //@ts-ignore
+          setResponseDetail(data.detail);
+        } else {
+          setTimeout(() => {
+            navigate('/reset');
+          }, 500);
+        }
       }
     }
   };
@@ -91,8 +98,11 @@ const ForgotPass: React.FC = () => {
           <Button sx={{...submitNavigateBtn, background: '#316FEA', marginBottom: '30px'}} fullWidth
                   onClick={handleForgotClick} variant="contained">Send</Button>
         </form>
-        <Link to="/"><Button sx={{...submitNavigateBtn, color: '#060E1E', borderColor: '#D3D8DC'}} fullWidth
+        <Link to="/"><Button sx={{...submitNavigateBtn, color: '#060E1E', borderColor: '#D3D8DC', marginBottom: '15px'}} fullWidth
                              variant="outlined">Cancel</Button></Link>
+        {responseDetail &&
+          <Alert severity='error'>{responseDetail}</Alert>
+        }
       </Box>
     </>
   );
