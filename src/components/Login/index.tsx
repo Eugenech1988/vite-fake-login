@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FocusEvent, ChangeEvent, KeyboardEvent, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -17,7 +17,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 const Login: React.FC = () => {
   const [errorEmail, setErrorEmail] = useState<string | null>(null);
   const [errorPass, setErrorPass] = useState<string | null>(null);
-  const [responseDetail, setResponseDetail] = useState<string | null>(null);
+  const [responseDetail, setResponseDetail] = useState<object>(null);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [emailVerified, setEmailVerified] = useState<boolean>(false);
@@ -25,78 +25,97 @@ const Login: React.FC = () => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
   };
 
-  const handleEmailInputChange = (e:any) => {
+  const handleEmailInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setEmail(e.target.value);
   };
 
-  const handlePassInputChange = (e:any) => {
+  const handlePassInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setPassword(e.target.value);
   };
 
-  const handlePassEnterPress = (e:any) => {
+  const handlePassEnterPress = (e: KeyboardEvent<HTMLDivElement>): void => {
     if (e.key === 'Enter') {
-      if (e.target.value <= 8) {
-        setErrorPass('Password must be more then 8 characters')
+      const target = e.target as HTMLInputElement;
+      if (target.value.length <= 8) {
+        setErrorPass('Password must be more than 8 characters');
       }
-      e.target.blur();
+      e.currentTarget.blur();
     }
-  }
+  };
 
   const handlePassFocus = () => {
-    setErrorPass(null)
-  }
+    setErrorPass(null);
+  };
 
-  const handlePassBlur = (e:any) => {
+  const handlePassBlur = (e: FocusEvent<HTMLInputElement>): void => {
     if (e.target.value.length <= 8) {
-      setErrorPass('Password must be more then 8 characters')
+      setErrorPass('Password must be more than 8 characters');
     }
-  }
+  };
 
   const handleEmailFocus = () => {
     setErrorEmail(null);
   };
 
-  const handleEmailEnterPress = (e:any) => {
+  const handleEmailEnterPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
-        setEmailVerified(true);
-        setErrorEmail(null);
+      const target = e.target as HTMLInputElement;
+      if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        .test(target.value)) {
       } else {
         setErrorEmail('Email is invalid');
       }
-      e.target.blur();
+      target.blur();
     }
   };
 
-  const handleEmailBlur = (e:any) => {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
+  const handleEmailBlur = (e: FocusEvent<HTMLInputElement>): void => {
+    if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      .test(e.target.value)) {
       setEmailVerified(true);
       setErrorEmail(null);
     } else {
       setErrorEmail('Email is invalid');
     }
   };
+
   const handleErrorFocus = () => {
     setErrorPass(null);
-  }
+  };
 
-  const handleSubmitClick = async (e:any) => {
+  const handleSubmitClick = async (e: any) => {
     e.preventDefault();
+    if (!email && !password) {
+      return;
+    }
+    const defaultEmail = 'test+ui@qencode.com';
+    const defaultPass = 'C4aLE2dRM7QE5mT*';
     if (!errorPass && !errorEmail) {
-      const response = await apiRequest(
+      const {data, error} = await apiRequest(
         '/v1/auth/login',
         'post',
         {
-          email: 'test+ui@qencode.com',
-          password: 'C4aLE2dRM7QE5mT*'
+          email: email === defaultEmail ? 'test+ui@qencode.com' : '',
+          password: password === defaultPass ? 'C4aLE2dRM7QE5mT*' : ''
         }
       );
-      setResponseDetail(response.detail);
+      if (error) {
+        console.log('Error occurred:', error);
+      } else {
+        console.log('Response:', data);
+        if (typeof data === 'string') {
+          setResponseDetail(data);
+        } else if (Array.isArray(data.detail)) {
+          const dataEmail = data.detail.find(detail => detail.field_name === 'email');
+          const dataPass = data.detail.find(detail => detail.field_name === 'password');
+          setResponseDetail({email: (dataEmail ? dataEmail : null), pass: (dataPass ? dataPass : null)})
+        }
+      }
     }
   };
   return (
@@ -106,10 +125,10 @@ const Login: React.FC = () => {
       <Box display="flex" justifyContent="space-between" marginBottom="30px">
         <Button
           sx={{...socialBtn, marginRight: '16px'}}
-          variant="outlined" startIcon={<img src={googleIcon}/>}>Google</Button>
+          variant="outlined" startIcon={<img src={googleIcon} alt={'google'}/>}>Google</Button>
         <Button
           sx={socialBtn}
-          variant="outlined" startIcon={<img src={githubIcon}/>}>GitHub</Button>
+          variant="outlined" startIcon={<img src={githubIcon} alt={'github'}/>}>GitHub</Button>
       </Box>
       <Divider sx={loginDivider}>OR</Divider>
       <Box>
@@ -133,7 +152,7 @@ const Login: React.FC = () => {
           </FormControl>
           {emailVerified &&
             <>
-              <FormControl sx={{marginBottom: '15px'}} fullWidth variant="outlined">
+              <FormControl error={errorPass !== null} sx={{marginBottom: '15px'}} fullWidth variant="outlined">
                 <InputLabel sx={inputLabel} htmlFor="outlined-adornment-password">Password</InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
@@ -172,10 +191,17 @@ const Login: React.FC = () => {
                   variant="contained">Log in to Qencode</Button>
         </form>
       </Box>
-      <Typography sx={{fontSize: '14px', lineHeight: '20px', marginBottom: '15px'}} textAlign="center">Is your company new to
+      <Typography sx={{fontSize: '14px', lineHeight: '20px', marginBottom: '15px'}} textAlign="center">Is your company
+        new to
         Qencode? <CustomLink path={'/'} text="Sign up"/></Typography>
-      {responseDetail &&
-        <Alert>{responseDetail}</Alert>
+      {responseDetail && (typeof responseDetail.detail === 'string') &&
+        <Alert sx={{marginBottom: '15px'}}>{responseDetail.detail}</Alert>
+      }
+      {responseDetail && (typeof responseDetail === 'object') && (responseDetail.email !== null) &&
+        <Alert sx={{marginBottom: '15px'}} severity='error'>{'Wrong email'}</Alert>
+      }
+      {responseDetail && (typeof responseDetail === 'object') && (responseDetail.pass !== null) &&
+        <Alert sx={{marginBottom: '15px'}} severity='error'>{'Wrong password'}</Alert>
       }
     </>
   );

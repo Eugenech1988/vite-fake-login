@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent, FocusEvent, MouseEventHandler, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import LogoBox from '../LogoBox';
 import HeadingNotify from '../HeadingNotify';
 import { input, inputLabel, submitNavigateBtn } from '../styleConstants';
@@ -11,9 +11,9 @@ import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
 const ForgotPass: React.FC = () => {
   const [errorEmail, setErrorEmail] = useState<string | null>(null);
   const [email, setEmail] = useState<string>('');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const handleEmailInputChange = (e:any) => {
+  const handleEmailInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
@@ -21,19 +21,20 @@ const ForgotPass: React.FC = () => {
     setErrorEmail(null);
   };
 
-  const handleEmailEnterPress = (e:any) => {
+  const handleEmailEnterPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
+      const target = e.target as HTMLInputElement;
+      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(target.value)) {
         setErrorEmail(null);
       } else {
         setErrorEmail('Email is invalid');
       }
-      e.target.blur();
+      target.blur();
     }
   };
 
-  const handleEmailBlur = (e:any) => {
+  const handleEmailBlur = (e: FocusEvent<HTMLInputElement>) => {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
       setErrorEmail(null);
     } else {
@@ -41,18 +42,19 @@ const ForgotPass: React.FC = () => {
     }
   };
 
-  const handleForgotClick = (e:any) => {
+  const handleForgotClick: MouseEventHandler<HTMLAnchorElement> = async (e) => {
     e.preventDefault();
-    if (!errorEmail) {
-      navigate('/reset');
-    }
-    // apiRequest(
+    // if (!errorEmail) {
+    //   navigate('/reset');
+    // }
+    // const response = await apiRequest(
     //   '/v1/auth/password-reset',
     //   'post',
     //   {
     //     email
     //   }
     // );
+    // console.log(response.detail[0]);
   };
   return (
     <>
