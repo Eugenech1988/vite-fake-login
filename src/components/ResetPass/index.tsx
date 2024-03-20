@@ -14,7 +14,8 @@ import {
 import { input, inputLabel, submitNavigateBtn } from '../styleConstants';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import apiRequest from '../../api';
 
 const ResetPass: React.FC = () => {
   const [errorPass, setErrorPass] = useState<string | null>(null);
@@ -43,8 +44,8 @@ const ResetPass: React.FC = () => {
   };
 
   const handleConfirmChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPasswordConfirm(e.target.value)
-  }
+    setPasswordConfirm(e.target.value);
+  };
 
   const handlePassConfirmBlur = (e: FocusEvent<HTMLInputElement>) => {
     if (e.target.value.length <= 8) {
@@ -66,7 +67,7 @@ const ResetPass: React.FC = () => {
     if (e.target.value.length <= 8) {
       setErrorPass('Password must be more than 8 characters');
     }
-  }
+  };
 
   const handlePassEnterPress = (e: any) => {
     if (e.key === 'Enter') {
@@ -76,20 +77,32 @@ const ResetPass: React.FC = () => {
       }
       e.currentTarget.blur();
     }
-  }
+  };
 
   const handlePassFocus = () => {
     setErrorPass(null);
-  }
+  };
   const handlePassConfirmFocus = () => {
     setErrorPassConfirm(null);
-  }
+  };
 
-  const handleResetClick = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleResetClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if ((password.length > 8) && (password_confirm.length > 8) && (password === password_confirm)) {
       setResetPassSuccess('Password saved successfully');
+      const {error, data} = await apiRequest(
+        '/v1/auth/reset',
+        'post',
+        {
+          password
+        }
+      );
+      if (error) {
+        console.log('Error occurred:', error);
+      } else {
+        console.log('Response:', data);
+      }
       setTimeout(() => {
         navigate('/');
       }, 1000);
@@ -105,7 +118,8 @@ const ResetPass: React.FC = () => {
       <form>
         <Typography sx={{fontSize: '15px', lineHeight: '21px', marginBottom: '8px'}}>Password</Typography>
         <FormControl sx={{marginBottom: '25px'}} fullWidth variant="outlined">
-          <InputLabel error={errorPass !== null} sx={inputLabel} htmlFor="outlined-adornment-password">Password</InputLabel>
+          <InputLabel error={errorPass !== null} sx={inputLabel}
+                      htmlFor="outlined-adornment-password">Password</InputLabel>
           <OutlinedInput
             id="outlined-adornment-password"
             fullWidth
@@ -134,7 +148,8 @@ const ResetPass: React.FC = () => {
         </FormControl>
         <Typography sx={{fontSize: '15px', lineHeight: '21px', marginBottom: '8px'}}>Confirm Password</Typography>
         <FormControl sx={{marginBottom: '30px'}} fullWidth variant="outlined">
-          <InputLabel error={errorPassConfirm !== null} sx={inputLabel} htmlFor="outlined-adornment-confirm">Password</InputLabel>
+          <InputLabel error={errorPassConfirm !== null} sx={inputLabel}
+                      htmlFor="outlined-adornment-confirm">Password</InputLabel>
           <OutlinedInput
             id="outlined-adornment-confirm"
             fullWidth
