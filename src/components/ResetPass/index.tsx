@@ -106,7 +106,7 @@ const ResetPass: React.FC = () => {
       setTimeout(() => {
         navigate('/');
       }, 1000);
-    } else if (password !== password_confirm) {
+    } else if ((password !== password_confirm) && ((password.length < 8) || password_confirm.length < 8)) {
       setErrorPass('Passwords are not equal');
       setErrorPassConfirm('Passwords are not equal');
     }
