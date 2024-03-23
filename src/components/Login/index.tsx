@@ -99,15 +99,13 @@ const Login: React.FC = () => {
     if (!email && !password) {
       return;
     }
-    const defaultEmail = 'test+ui@qencode.com';
-    const defaultPass = 'C4aLE2dRM7QE5mT*';
     if (!errorPass && !errorEmail) {
       const {data, error} = await apiRequest(
         '/v1/auth/login',
         'post',
         {
-          email: email === defaultEmail ? 'test+ui@qencode.com' : '',
-          password: password === defaultPass ? 'C4aLE2dRM7QE5mT*' : ''
+          email,
+          password
         }
       );
       if (error) {
